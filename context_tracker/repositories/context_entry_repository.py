@@ -1,14 +1,11 @@
 from ..models import ContextEntry
+from ..models.factories.context_entry_factory import ContextEntryFactory
+from .interfaces.context_entry_repository_interface import ContextEntryRepositoryInterface
 from django.utils.timezone import now
 
-class ContextEntryRepository:
+class ContextEntryRepository(ContextEntryRepositoryInterface):
     def create_context_entry(self, user_id, activity, note):
-        return ContextEntry.objects.create(
-            user_id=user_id,
-            activity=activity,
-            note=note,
-            start_time=now()
-        )
+        return ContextEntryFactory.create(user_id=user_id, activity=activity, note=note)
 
     def end_active_contexts(self, user_id):
         return ContextEntry.objects.filter(user_id=user_id, end_time__isnull=True).update(end_time=now())
